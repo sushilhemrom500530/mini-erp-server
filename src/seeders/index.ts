@@ -1,52 +1,53 @@
 import mongoose from "mongoose";
-import { ADMIN_EMAIL, ADMIN_PASSWORD } from "./../config/index";
+import { ADMIN_EMAIL, ADMIN_PASSWORD } from "../config";
 import { User } from "../models/user/user.model";
+import { users } from "../data";
 
-const MONGODB_URI = process.env.DATABASE_URL;
+const MONGODB_URI = process.env.DATABASE_URL!;
 
 async function seedDatabase() {
   try {
     console.log("🔌 Connecting to MongoDB...");
-    await mongoose.connect(MONGODB_URI! as string);
+    await mongoose.connect(MONGODB_URI);
     console.log("✅ Connected to MongoDB");
 
-    // ADMIN USER SETUP
     const adminUser = {
       fullName: "Admin User",
-      email: ADMIN_EMAIL as string,
-      password: ADMIN_PASSWORD as string,
+      email: ADMIN_EMAIL,
+      password: ADMIN_PASSWORD,
       role: "admin" as const,
-      phoneNumber: "01767122497",
+      phone: "01767122497",
       dateOfBirth: "2000-01-01",
       status: "active" as const,
     };
 
-    console.log("👤 Checking for existing admin...");
-
     const existingAdmin = await User.findOne({ email: adminUser.email });
 
     if (!existingAdmin) {
-      console.log("🆕 Admin not found. Creating admin user...");
-
       await User.create(adminUser);
-
-      console.log("✅ Admin user created successfully!");
+      console.log("✅ Admin created");
     } else {
-      console.log("ℹ️ Admin already exists. Ensuring status is active...");
       existingAdmin.status = "active";
       await existingAdmin.save();
-      console.log("✅ Admin status updated to active!");
+      console.log("ℹ️ Admin already exists");
     }
 
-    // YOUR OTHER SEEDING LOGIC (users, providers, etc.)
-    console.log("\n🎉 Admin setup completed!");
+    for (const user of users) {
+      const exists = await User.exists({ email: user.email });
+
+      if (!exists) {
+        await User.create(user);
+        console.log(`✅ Created ${user.role}: ${user.email}`);
+      }
+    }
+
+    console.log("🎉 Database seeding completed!");
   } catch (error) {
-    console.error("❌ Error while seeding database:", error);
-    process.exit(1);
+    console.error("❌ Database seeding failed:", error);
+    process.exitCode = 1;
   } finally {
     await mongoose.connection.close();
-    console.log("\n👋 Database connection closed");
-    process.exit(0);
+    console.log("👋 Database connection closed");
   }
 }
 

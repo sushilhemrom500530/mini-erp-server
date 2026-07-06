@@ -1,19 +1,8 @@
-const createProduct = catchAsync(async (req: Request, res: Response) => {
-  // If your multiUploadHandler attaches the image path to req.file or req.files
-  const imgFile = (req.files as any)?.productImage?.[0];
-  const productData = {
-    ...req.body,
-    ...(imgFile && { productImage: imgFile.path }), // Adjust key based on your file uploader setup
-  };
-
-  const result = await ProductService.createProduct(productData);
-  sendResponse(res, {
-    statusCode: StatusCodes.CREATED,
-    success: true,
-    message: "Product created successfully.",
-    data: result,
-  });
-});
+import { StatusCodes } from "http-status-codes";
+import sendResponse from "../../utils/sendResponse";
+import { ProductService } from "./product.service";
+import catchAsync from "../../utils/catchAsync";
+import { Request, Response } from "express";
 
 const getAll = catchAsync(async (req: Request, res: Response) => {
   const result = await ProductService.getAll(req.query as any);
@@ -21,6 +10,24 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
     statusCode: StatusCodes.OK,
     success: true,
     message: "Products retrieved successfully.",
+    data: result,
+  });
+});
+
+const createProduct = catchAsync(async (req: Request, res: Response) => {
+  const files = req.body.files as {
+    productImage?: string;
+  };
+  const productData = {
+    ...req.body,
+    ...(files.productImage && { productImage: files.productImage }),
+  };
+
+  const result = await ProductService.createProduct(productData);
+  sendResponse(res, {
+    statusCode: StatusCodes.CREATED,
+    success: true,
+    message: "Product created successfully.",
     data: result,
   });
 });

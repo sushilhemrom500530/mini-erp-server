@@ -7,6 +7,10 @@ import {
 import { ProductValidations } from "./product.validation";
 import { ProductController } from "./product.controller";
 import validateRequest from "../../shared/validateRequest";
+import {
+  multiUploadHandler,
+  singleUploadHandler,
+} from "../../handler/cloudinary/fileUploadHandler";
 
 const router = express.Router();
 
@@ -21,7 +25,8 @@ router.post(
   "/create",
   auth("admin"),
   clearCacheMiddleware("products"),
-  multiUploadHandler([{ name: "productImage", maxCount: 1 }]),
+  singleUploadHandler("productImage"),
+  //   multiUploadHandler([{ name: "productImage", maxCount: 1 }]),
   validateRequest(ProductValidations.createProductValidationSchema),
   ProductController.createProduct,
 );
