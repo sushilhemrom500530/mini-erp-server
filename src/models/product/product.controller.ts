@@ -73,12 +73,12 @@ const updateProduct = catchAsync(async (req: Request, res: Response) => {
 
 const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   const { id: productId } = req.params;
-  await ProductService.deleteProduct(productId as string);
+  const result = await ProductService.deleteProduct(productId as string);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: "Product deleted successfully.",
-    data: null,
+    data: result,
   });
 });
 

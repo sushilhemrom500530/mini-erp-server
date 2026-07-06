@@ -39,7 +39,9 @@ const createProduct = async (payload: IProduct) => {
 };
 
 const getSingleProduct = async (productId: string) => {
-  const product = await Product.findById(productId).lean();
+  const product = await Product.findById(productId)
+    .populate("owner", "fullName email profileUrl")
+    .lean();
   if (!product || product.isDeleted) {
     throw new AppError(
       StatusCodes.NOT_FOUND,
@@ -78,11 +80,14 @@ const deleteProduct = async (productId: string) => {
     throw new AppError(StatusCodes.NOT_FOUND, "Product not found.");
   }
 
-  return await Product.findByIdAndUpdate(
+  await Product.findByIdAndUpdate(
     productId,
     { isDeleted: true },
     { new: true },
   );
+
+  // we know that, product will delete only one
+  return { deletedCount: 1 };
 };
 
 export const ProductService = {
