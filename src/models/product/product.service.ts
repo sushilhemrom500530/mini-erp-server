@@ -43,10 +43,7 @@ const getSingleProduct = async (productId: string) => {
     .populate("owner", "fullName email profileUrl")
     .lean();
   if (!product || product.isDeleted) {
-    throw new AppError(
-      StatusCodes.NOT_FOUND,
-      "Product not found or has been removed.",
-    );
+    throw new AppError(StatusCodes.NOT_FOUND, "Product not found.");
   }
   return product;
 };

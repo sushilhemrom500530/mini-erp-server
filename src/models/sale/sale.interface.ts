@@ -12,4 +12,5 @@ export interface ISale {
   products: ISaleProductItem[];
   grandTotal: number;
   saleDate: Date;
+  isDeleted?: boolean;
 }

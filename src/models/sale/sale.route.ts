@@ -12,9 +12,16 @@ const router = express.Router();
 
 router.get(
   "/get-all",
-  auth("common"),
+  auth("admin"),
   cacheMiddleware("products", 60),
   SaleController.getAll,
+);
+
+router.get(
+  "/get-my",
+  auth("common"),
+  cacheMiddleware("products", 60),
+  SaleController.getMy,
 );
 
 router.post(
@@ -23,6 +30,13 @@ router.post(
   clearCacheMiddleware("products"),
   validateRequest(SaleValidations.createSaleValidationSchema),
   SaleController.createSale,
+);
+
+router.get(
+  "/find/:id",
+  auth("common"),
+  cacheMiddleware("products", 60),
+  SaleController.getSingleSale,
 );
 
 export const SaleRoutes = router;

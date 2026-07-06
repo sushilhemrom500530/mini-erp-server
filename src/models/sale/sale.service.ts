@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { StatusCodes } from "http-status-codes";
 import { Sale } from "./sale.model";
 import { ISale, ISaleProductItem } from "./sale.interface";
@@ -8,6 +8,31 @@ import QueryBuilder from "../../shared/queryBuilder";
 
 const getAll = async (query: any) => {
   const filter: any = { ...query, isDeleted: false };
+
+  const productQuery = new QueryBuilder<ISale>(Sale.find(), filter)
+    .search(["productName", "sku", "category"])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const results = await productQuery.modelQuery
+    .select("-isDeleted -__v")
+    .lean();
+  const meta = await productQuery.countTotal();
+
+  return {
+    meta,
+    results,
+  };
+};
+
+const getMy = async (query: any, soldBy: string) => {
+  const filter: any = {
+    ...query,
+    soldBy: new Types.ObjectId(soldBy),
+    isDeleted: false,
+  };
 
   const productQuery = new QueryBuilder<ISale>(Sale.find(), filter)
     .search(["productName", "sku", "category"])
@@ -96,7 +121,29 @@ const createSale = async (
   }
 };
 
+const getSingleSale = async (saleId: string) => {
+  if (!mongoose.Types.ObjectId.isValid(saleId)) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "Invalid Sale ID format provided.",
+    );
+  }
+
+  const result = await Sale.findById(saleId)
+    .populate("soldBy", "fullName email profileUrl")
+    .populate("products.product", "-isDeleted -createdAt -updatedAt -__v")
+    .select("-isDeleted -__v")
+    .lean();
+
+  if (!result) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Sale history record not found.");
+  }
+
+  return result;
+};
 export const SaleService = {
   getAll,
+  getMy,
   createSale,
+  getSingleSale,
 };

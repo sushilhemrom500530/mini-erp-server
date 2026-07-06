@@ -15,6 +15,17 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMy = catchAsync(async (req: Request, res: Response) => {
+  const { id: soldBy } = req.user as JwtUserPayload;
+  const result = await SaleService.getMy(req.query as any, soldBy as string);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "My Sales retrieved successfully.",
+    data: result,
+  });
+});
+
 const createSale = catchAsync(async (req: Request, res: Response) => {
   const { id: soldBy } = req.user as JwtUserPayload;
 
@@ -27,8 +38,22 @@ const createSale = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getSingleSale = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await SaleService.getSingleSale(id as string);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Sale retrieved successfully.",
+    data: result,
+  });
+});
 
 export const SaleController = {
   getAll,
+  getMy,
   createSale,
+  getSingleSale,
 };
