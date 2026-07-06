@@ -4,6 +4,7 @@ import { AuthRoutes } from "../models/auth/auth.route";
 import { NotificationRoutes } from "../models/notification/notification.route";
 import { ProductRoutes } from "../models/product/product.route";
 import { SaleRoutes } from "../models/sale/sale.route";
+import { DashboardRoutes } from "../models/meta/meta.route";
 const router = express.Router();
 
 const apiRoutes: any[] = [
@@ -18,6 +19,10 @@ const apiRoutes: any[] = [
   {
     path: "/sale",
     route: SaleRoutes,
+  },
+  {
+    path: "/meta",
+    route: DashboardRoutes,
   },
   {
     path: "/user",

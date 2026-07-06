@@ -3,9 +3,11 @@ import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { DashboardService } from "./meta.service";
+import { JwtUserPayload } from "../../middlewares/auth";
 
 const getDashboardStats = catchAsync(async (req: Request, res: Response) => {
-  const result = await DashboardService.getDashboardStats();
+  const user = req.user as JwtUserPayload;
+  const result = await DashboardService.getDashboardStats(user);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

@@ -23,7 +23,7 @@ router.get(
 
 router.get(
   "/get-my",
-  auth("common"),
+  auth("admin", "manager"),
   cacheMiddleware("products", 60),
   ProductController.getMyProducts,
 );
@@ -37,7 +37,7 @@ router.get(
 
 router.post(
   "/create",
-  auth("admin"),
+  auth("admin", "manager"),
   clearCacheMiddleware("products"),
   singleUploadHandler("productImage"),
   // multiUploadHandler([{ name: "productImage", maxCount: 1 }]),
@@ -47,7 +47,7 @@ router.post(
 
 router.patch(
   "/update/:id",
-  auth("admin"),
+  auth("admin", "manager"),
   clearCacheMiddleware("products"),
   multiUploadHandler([{ name: "productImage", maxCount: 1 }]),
   validateRequest(ProductValidations.updateProductValidationSchema),
@@ -56,7 +56,7 @@ router.patch(
 
 router.delete(
   "/delete/:id",
-  auth("admin"),
+  auth("admin", "manager"),
   clearCacheMiddleware("products"),
   ProductController.deleteProduct,
 );

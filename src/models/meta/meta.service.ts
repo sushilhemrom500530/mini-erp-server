@@ -1,20 +1,21 @@
+import { JwtUserPayload } from "../../middlewares/auth";
 import { Product } from "../product/product.model";
 import { Sale } from "../sale/sale.model";
 
-const getDashboardStats = async () => {
-  const [totalProducts, totalSales, lowStockProducts] = await Promise.all([
+const getDashboardStats = async (user: JwtUserPayload) => {
+  const { role } = user;
+
+  const [totalProducts, lowStockProducts] = await Promise.all([
     Product.countDocuments({ isDeleted: false }),
-
-    Sale.countDocuments(),
-
     Product.countDocuments({ isDeleted: false, stockQuantity: { $lt: 5 } }),
   ]);
 
-  return {
-    totalProducts,
-    totalSales,
-    lowStockProducts,
-  };
+  if (role === "admin" || role === "manager") {
+    const totalSales = await Sale.countDocuments();
+    return { totalProducts, lowStockProducts, totalSales };
+  }
+
+  return { totalProducts, lowStockProducts };
 };
 
 export const DashboardService = {
