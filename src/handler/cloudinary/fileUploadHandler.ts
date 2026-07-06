@@ -2,11 +2,16 @@ import multer, { FileFilterCallback } from "multer";
 import { Request, Response, NextFunction } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import { v4 as uuidv4 } from "uuid";
+import {
+  CLOUDINARY_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+} from "../../config";
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: CLOUDINARY_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
 });
 
 const storage = multer.memoryStorage();
@@ -64,8 +69,9 @@ export const singleUploadHandler = (fieldName: string) => {
       try {
         const url = await uploadToCloudinary(req.file);
 
-        // attach clean way
-        (req.body as any).file = url;
+        (req.body as any).files = {
+          [fieldName]: url,
+        };
 
         next();
       } catch (error) {

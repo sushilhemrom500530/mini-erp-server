@@ -5,17 +5,17 @@ import { Product } from "./product.model";
 import QueryBuilder from "../../shared/queryBuilder";
 
 const createProduct = async (payload: IProduct) => {
-  // Check if SKU already exists to avoid duplication errors
-  const isSkuExist = await Product.findOne({ sku: payload.sku });
-  if (isSkuExist) {
-    throw new AppError(
-      StatusCodes.BAD_REQUEST,
-      "A product with this SKU already exists.",
-    );
-  }
+  // const isSkuExist = await Product.findOne({ sku: payload.sku });
+  // if (isSkuExist) {
+  //   throw new AppError(
+  //     StatusCodes.BAD_REQUEST,
+  //     "A product with this SKU already exists.",
+  //   );
+  // }
 
-  const result = await Product.create(payload);
-  return result;
+  // const result = await Product.create(payload);
+  // return result;
+  return payload;
 };
 
 const getAll = async (query: any) => {

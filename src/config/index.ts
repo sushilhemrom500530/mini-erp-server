@@ -40,6 +40,9 @@ const envSchema = z.object({
   SUPPORT_EMAIL: z.string().optional(),
   SUPPORT_PHONE: z.string().optional(),
   REDIS_URL: z.string().default("redis://localhost:6379"),
+  CLOUDINARY_API_SECRET: z.string().optional(),
+  CLOUDINARY_API_KEY: z.string().optional(),
+  CLOUDINARY_NAME: z.string().optional(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -71,4 +74,8 @@ export const {
   AWS_BUCKET_NAME,
 
   REDIS_URL,
+
+  CLOUDINARY_API_SECRET,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_NAME,
 } = parsedEnv.data;

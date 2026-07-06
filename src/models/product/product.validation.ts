@@ -13,27 +13,29 @@ const createProductValidationSchema = z.object({
       message: "SKU code is required.",
     })
     .trim()
+    .min(3, "SKU code must be at least 3 characters long.")
     .toUpperCase(),
 
   category: z
     .string({
       message: "Category is required.",
     })
-    .trim(),
+    .trim()
+    .min(2, "Category must be at least 2 characters long."),
 
-  purchasePrice: z
+  purchasePrice: z.coerce
     .number({
       message: "Purchase price is required.",
     })
     .positive("Purchase price must be greater than 0."),
 
-  sellingPrice: z
+  sellingPrice: z.coerce
     .number({
       message: "Selling price is required.",
     })
     .positive("Selling price must be greater than 0."),
 
-  stockQuantity: z
+  stockQuantity: z.coerce
     .number({
       message: "Stock quantity is required.",
     })

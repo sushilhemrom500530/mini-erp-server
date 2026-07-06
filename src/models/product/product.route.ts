@@ -26,7 +26,7 @@ router.post(
   auth("admin"),
   clearCacheMiddleware("products"),
   singleUploadHandler("productImage"),
-  //   multiUploadHandler([{ name: "productImage", maxCount: 1 }]),
+  // multiUploadHandler([{ name: "productImage", maxCount: 1 }]),
   validateRequest(ProductValidations.createProductValidationSchema),
   ProductController.createProduct,
 );
