@@ -21,6 +21,13 @@ router.get(
   ProductController.getAll,
 );
 
+router.get(
+  "/find/:id",
+  auth("common"),
+  cacheMiddleware("products", 60),
+  ProductController.getSingleProduct,
+);
+
 router.post(
   "/create",
   auth("admin"),
@@ -29,6 +36,22 @@ router.post(
   // multiUploadHandler([{ name: "productImage", maxCount: 1 }]),
   validateRequest(ProductValidations.createProductValidationSchema),
   ProductController.createProduct,
+);
+
+router.patch(
+  "/update/:id",
+  auth("admin"),
+  clearCacheMiddleware("products"),
+  multiUploadHandler([{ name: "productImage", maxCount: 1 }]),
+  validateRequest(ProductValidations.updateProductValidationSchema),
+  ProductController.updateProduct,
+);
+
+router.delete(
+  "/delete/:id",
+  auth("admin"),
+  clearCacheMiddleware("products"),
+  ProductController.deleteProduct,
 );
 
 export const ProductRoutes = router;

@@ -38,7 +38,57 @@ const createProduct = async (payload: IProduct) => {
   return result;
 };
 
+const getSingleProduct = async (productId: string) => {
+  const product = await Product.findById(productId).lean();
+  if (!product || product.isDeleted) {
+    throw new AppError(
+      StatusCodes.NOT_FOUND,
+      "Product not found or has been removed.",
+    );
+  }
+  return product;
+};
+
+const updateProduct = async (productId: string, payload: Partial<IProduct>) => {
+  const product = await Product.findById(productId);
+  if (!product || product.isDeleted) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Product not found.");
+  }
+
+  if (payload.sku && payload.sku !== product.sku) {
+    const isSkuExist = await Product.findOne({ sku: payload.sku });
+    if (isSkuExist) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "This SKU is already assigned to another product.",
+      );
+    }
+  }
+
+  const result = await Product.findByIdAndUpdate(productId, payload, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
+};
+
+const deleteProduct = async (productId: string) => {
+  const product = await Product.findById(productId);
+  if (!product || product.isDeleted) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Product not found.");
+  }
+
+  return await Product.findByIdAndUpdate(
+    productId,
+    { isDeleted: true },
+    { new: true },
+  );
+};
+
 export const ProductService = {
-  createProduct,
   getAll,
+  getSingleProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
 };

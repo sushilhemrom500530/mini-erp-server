@@ -35,7 +35,57 @@ const createProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
+  const { id: productId } = req.params;
+  const result = await ProductService.getSingleProduct(productId as string);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Product fetched successfully.",
+    data: result,
+  });
+});
+
+const updateProduct = catchAsync(async (req: Request, res: Response) => {
+  const { id: productId } = req.params;
+
+  // Safely extract optional file layout from body
+  const files = (req.body.files || {}) as { productImage?: string };
+
+  const updatedData = {
+    ...req.body,
+    ...(files.productImage && { productImage: files.productImage }),
+  };
+
+  delete updatedData.files;
+
+  const result = await ProductService.updateProduct(
+    productId as string,
+    updatedData,
+  );
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Product updated successfully.",
+    data: result,
+  });
+});
+
+const deleteProduct = catchAsync(async (req: Request, res: Response) => {
+  const { id: productId } = req.params;
+  await ProductService.deleteProduct(productId as string);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Product deleted successfully.",
+    data: null,
+  });
+});
+
 export const ProductController = {
-  createProduct,
   getAll,
+  getSingleProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
 };
