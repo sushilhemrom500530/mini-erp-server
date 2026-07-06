@@ -3,6 +3,7 @@ import sendResponse from "../../utils/sendResponse";
 import { ProductService } from "./product.service";
 import catchAsync from "../../utils/catchAsync";
 import { Request, Response } from "express";
+import { JwtUserPayload } from "../../middlewares/auth";
 
 const getAll = catchAsync(async (req: Request, res: Response) => {
   const result = await ProductService.getAll(req.query as any);
@@ -15,10 +16,12 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
 });
 
 const createProduct = catchAsync(async (req: Request, res: Response) => {
+  const { id: owner } = req.user as JwtUserPayload;
   const files = req.body.files as {
     productImage?: string;
   };
   const productData = {
+    owner,
     ...req.body,
     ...(files.productImage && { productImage: files.productImage }),
   };

@@ -4,20 +4,6 @@ import { IProduct } from "./product.interface";
 import { Product } from "./product.model";
 import QueryBuilder from "../../shared/queryBuilder";
 
-const createProduct = async (payload: IProduct) => {
-  // const isSkuExist = await Product.findOne({ sku: payload.sku });
-  // if (isSkuExist) {
-  //   throw new AppError(
-  //     StatusCodes.BAD_REQUEST,
-  //     "A product with this SKU already exists.",
-  //   );
-  // }
-
-  // const result = await Product.create(payload);
-  // return result;
-  return payload;
-};
-
 const getAll = async (query: any) => {
   const filter: any = { ...query, isDeleted: false };
 
@@ -37,6 +23,19 @@ const getAll = async (query: any) => {
     meta,
     results,
   };
+};
+
+const createProduct = async (payload: IProduct) => {
+  const isSkuExist = await Product.findOne({ sku: payload.sku });
+  if (isSkuExist) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "A product with this SKU already exists.",
+    );
+  }
+
+  const result = await Product.create(payload);
+  return result;
 };
 
 export const ProductService = {
