@@ -22,6 +22,13 @@ router.get(
 );
 
 router.get(
+  "/get-my",
+  auth("common"),
+  cacheMiddleware("products", 60),
+  ProductController.getMyProducts,
+);
+
+router.get(
   "/find/:id",
   auth("common"),
   cacheMiddleware("products", 60),

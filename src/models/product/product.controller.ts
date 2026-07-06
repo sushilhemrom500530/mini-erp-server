@@ -15,6 +15,20 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyProducts = catchAsync(async (req: Request, res: Response) => {
+  const { id: userId } = req.user as JwtUserPayload;
+  const result = await ProductService.getMyProducts(
+    req.query as any,
+    userId as string,
+  );
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "My products retrieved successfully.",
+    data: result,
+  });
+});
+
 const createProduct = catchAsync(async (req: Request, res: Response) => {
   const { id: owner } = req.user as JwtUserPayload;
   const files = req.body.files as {
@@ -84,6 +98,7 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
 
 export const ProductController = {
   getAll,
+  getMyProducts,
   getSingleProduct,
   createProduct,
   updateProduct,
