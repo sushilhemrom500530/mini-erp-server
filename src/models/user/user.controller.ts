@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { UserService } from "./user.service";
-import { uploadToS3 } from "./../../middlewares/fileUploadHandler";
 import { UserStatus } from "./user.constant";
 import { StatusCodes } from "http-status-codes";
 import AppError from "../../errors/AppError";
@@ -71,12 +70,12 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
   if (!existingUser)
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
 
-  const files = req.files as {
-    profile?: Express.Multer.File[];
+  const files = req.body.files as {
+    profile?: string;
   };
 
-  if (files?.profile?.[0]) {
-    userData.image = await uploadToS3(files.profile[0]);
+  if (files?.profile) {
+    userData.profileUrl = files.profile;
   }
 
   // Prevent role changes

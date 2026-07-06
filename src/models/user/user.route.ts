@@ -2,12 +2,12 @@ import express from "express";
 import { UserController } from "./user.controller";
 import { auth } from "./../../middlewares/auth";
 import validateRequest from "./../../shared/validateRequest";
-import { multiUploadHandler } from "./../../middlewares/fileUploadHandler";
 import { userValidation } from "./user.validation";
 import {
   cacheMiddleware,
   clearCacheMiddleware,
 } from "./../../middlewares/cacheMiddleware";
+import { multiUploadHandler } from "../../handler/cloudinary/fileUploadHandler";
 
 const router = express.Router();
 
