@@ -1,15 +1,14 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import jwt from "jsonwebtoken";
+import { UserRole } from "../models/user/user.interface";
 
 export interface JwtUserPayload {
   id: string;
   email: string;
-  role: IRole;
+  role: UserRole;
 }
 
-export type IRole = "admin" | "user" | "basicUser" | "superUser";
-
-type AuthRole = IRole | "common";
+type AuthRole = UserRole | "common";
 
 export const auth = (...roles: AuthRole[]): RequestHandler => {
   return (req: Request, res: Response, next: NextFunction) => {

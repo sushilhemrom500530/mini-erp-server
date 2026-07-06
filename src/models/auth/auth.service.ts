@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET_KEY } from "./../../config/index";
 import { User, OTP } from "./../user/user.model";
-import { IUser } from "./../user/user.interface";
+import { IUser, UserRole } from "./../user/user.interface";
 import { Request } from "express";
 import {
   generateOTP,
@@ -387,6 +387,7 @@ const findOrCreateUser = async (data: {
   provider: "google" | "apple";
   providerId: string;
   avatar?: string;
+  role: UserRole;
 }) => {
   let user = await User.findOne({
     provider: data.provider,
@@ -397,10 +398,10 @@ const findOrCreateUser = async (data: {
     user = await User.create({
       name: data.name,
       email: data.email,
-      role: "user",
+      role: data?.role,
       provider: data.provider,
       providerId: data.providerId,
-      image: data.avatar,
+      profileUrl: data.avatar,
     });
   }
 

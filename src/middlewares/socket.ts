@@ -1,12 +1,12 @@
 import { Socket } from "socket.io";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET_KEY } from "../config";
-import { IRole } from "./auth";
+import { UserRole } from "../models/user/user.interface";
 
 interface IJwtPayload {
   id: string;
   email: string;
-  role: IRole;
+  role: UserRole;
   [key: string]: unknown;
 }
 

@@ -54,7 +54,7 @@ router.post(
 
 router.post(
   "/change-password",
-  auth("admin", "user"),
+  auth("common"),
   clearCacheMiddleware("users"),
   validateRequest(authValidation.changePasswordSchema),
   AuthController.changePassword,

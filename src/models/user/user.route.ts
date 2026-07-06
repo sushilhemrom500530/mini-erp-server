@@ -13,21 +13,21 @@ const router = express.Router();
 
 router.get(
   "/get-all",
-  auth("admin", "user"),
+  auth("common"),
   cacheMiddleware("users", 60),
   UserController.getAll,
 );
 
 router.get(
   "/find/:id",
-  auth("admin", "user"),
+  auth("common"),
   cacheMiddleware("users", 60),
   UserController.getSingleUser,
 );
 
 router.patch(
   "/update-my-profile",
-  auth("admin", "user"),
+  auth("common"),
   clearCacheMiddleware("users"),
   multiUploadHandler([{ name: "profile", maxCount: 1 }]),
   UserController.updateMyProfile,
@@ -35,14 +35,14 @@ router.patch(
 
 router.get(
   "/get-my-profile",
-  auth("admin", "user"),
+  auth("common"),
   cacheMiddleware("users", 60),
   UserController.getMyProfile,
 );
 
 router.patch(
   "/delete/my-account",
-  auth("admin", "user"),
+  auth("common"),
   clearCacheMiddleware("users"),
   UserController.softDeleteUser,
 );

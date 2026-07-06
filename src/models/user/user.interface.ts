@@ -1,16 +1,11 @@
 import { Document } from "mongoose";
 import { Types } from "mongoose";
 
-export type UserRole = "admin" | "user" | "basicUser" | "superUser";
+export type UserRole = "admin" | "manager" | "employee";
 
 type ProviderType = "google" | "apple";
 
 type UserStatus = "pending" | "active" | "inactive" | "suspended" | "deleted";
-
-interface IGeoPoint {
-  type: "Point";
-  coordinates: number[];
-}
 
 export interface IUser {
   _id?: Types.ObjectId;
@@ -27,45 +22,13 @@ export interface IUser {
 
   phone: string;
 
-  image?: string;
+  profileUrl?: string;
 
   coverImage?: Record<string, any>;
 
   gender?: string;
 
-  country: string;
-
-  myWalet?: string;
-
-  handicap: string;
-
-  clubHandicap?: number | null;
-
-  club?: Types.ObjectId;
-
-  facebookLink?: string;
-  instagramLink?: string;
-  linkdinLink?: string;
-  xLink?: string;
-
-  myLocation?: IGeoPoint;
-  currentLocation?: IGeoPoint;
-
-  privacyPolicyAccepted?: boolean;
-
-  isVerified?: boolean;
-
-  isResetPassword?: boolean;
-
-  isSubscribe?: boolean;
-
-  isAprovedAsSupperUser?: boolean;
-
-  teebox?: string;
-
   fcmToken?: string;
-
-  oneTimeCode?: string | null;
 
   provider?: ProviderType;
 
