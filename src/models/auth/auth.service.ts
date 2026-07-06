@@ -18,8 +18,11 @@ const userRegister = async (payload: IUser) => {
   const { email } = payload;
 
   const user = await TempUser.create(payload);
+
   const otp = generateOTP();
+
   await saveOTP(email, otp);
+
   await sendOTPEmail(email, otp);
 
   // --- JWT Token ---
@@ -165,7 +168,7 @@ const verifyOtp = async (req: Request, otp: string) => {
   await User.collection.insertOne({
     ...userData,
     status: "active",
-    updated_at: new Date(),
+    updatedAt: new Date(),
     isVerified: true,
   });
 
@@ -199,14 +202,16 @@ const resendOtp = async (email: string) => {
     await OTP.deleteOne({ email });
   }
   const otp = generateOTP();
+
   await saveOTP(email, otp);
+
   await sendOTPEmail(email, otp);
 
   const token = jwt.sign({ email }, JWT_SECRET_KEY as string, {
     expiresIn: "15m",
   });
 
-  return { token, otp };
+  return { token };
 };
 
 const forgotPassword = async (email: string) => {
@@ -217,14 +222,16 @@ const forgotPassword = async (email: string) => {
   }
 
   const otp = generateOTP();
+
   await saveOTP(email, otp);
+
   await sendOTPEmail(email, otp);
 
   // --- JWT Token ---
   const token = jwt.sign({ email }, JWT_SECRET_KEY as string, {
     expiresIn: "15m",
   });
-  return { token, otp };
+  return { token };
 };
 
 const forgotPasswordOtpverify = async (req: Request, otp: string) => {

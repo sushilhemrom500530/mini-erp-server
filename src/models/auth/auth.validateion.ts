@@ -17,16 +17,22 @@ const registerSchema = z.object({
     .string({
       message: "Password is required",
     })
-    .min(8, "Password must be at least 8 characters")
-    .refine((value) => /[a-zA-Z]/.test(value), {
-      message: "Password must contain at least 1 letter",
-    })
-    .refine((value) => /\d/.test(value), {
-      message: "Password must contain at least 1 number",
-    }),
+    .min(8, "Password must be at least 8 characters"),
+  // .refine((value) => /[a-zA-Z]/.test(value), {
+  //   message: "Password must contain at least 1 letter",
+  // })
+  // .refine((value) => /\d/.test(value), {
+  //   message: "Password must contain at least 1 number",
+  // }),
 
-  role: z.enum(["manager", "employee"] as const, {
-    message: "Invalid role",
+  role: z.enum(["manager", "employee"], {
+    error: (issue) => {
+      if (issue.input === undefined) {
+        return "Role is required.";
+      }
+
+      return 'Role must be one of the following values: "manager" or "employee".';
+    },
   }),
 });
 

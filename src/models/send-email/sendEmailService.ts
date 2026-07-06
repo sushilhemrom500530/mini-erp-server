@@ -73,11 +73,11 @@ export const sendOTPEmail = async (
     <div class="email-wrapper">
       <div class="email-card">
         <div class="header">
-          <div class="logo">H.O.L.E</div>
+          <div class="logo">ERP-Management</div>
         </div>
         <div class="content">
           <h1 class="title">Verification Code</h1>
-          <p class="text">To securely sign in to your <strong>H.O.L.E</strong> account, please use the code below. This code will expire shortly.</p>
+          <p class="text">To securely sign in to your <strong>ERP-Management</strong> account, please use the code below. This code will expire shortly.</p>
           
           <div class="otp-box">
             <div class="timer-badge">Valid for 3 minutes</div> 
@@ -87,12 +87,12 @@ export const sendOTPEmail = async (
           <p class="text" style="font-size: 13px;">If you didn't request this, you can safely ignore this email. Your account security is our priority.</p>
           
           <p class="text" style="margin-top: 30px; font-weight: 600; color: #2d3436;">
-            Thanks,<br>Team H.O.L.E
+            Thanks,<br>Team ERP-Management
           </p>
         </div>
       </div>
       <div class="footer">
-        &copy; ${new Date().getFullYear()} H.O.L.E Inc. All rights reserved.
+        &copy; ${new Date().getFullYear()} ERP-Management Inc. All rights reserved.
       </div>
     </div>
   </body>
@@ -100,7 +100,7 @@ export const sendOTPEmail = async (
   `;
 
   const mailOptions = {
-    from: `"H.O.L.E Security" <${process.env.Nodemailer_GMAIL}>`,
+    from: `"ERP-Management" <${process.env.Nodemailer_GMAIL}>`,
     to: email,
     subject: `${otp} is your verification code`,
     html: emailContent,
