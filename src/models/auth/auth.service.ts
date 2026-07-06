@@ -303,7 +303,7 @@ const resetPassword = async (req: Request) => {
     };
     email = decoded.email;
   } catch (error: any) {
-    if (error.name === "TokenExpiredError") {
+    if (error.fullName === "TokenExpiredError") {
       throw new AppError(
         StatusCodes.UNAUTHORIZED,
         "Token expired, please try again",
@@ -383,7 +383,7 @@ const refreshToken = async (token: string) => {
 
 const findOrCreateUser = async (data: {
   email: string;
-  name: string;
+  fullName: string;
   provider: "google" | "apple";
   providerId: string;
   avatar?: string;
@@ -396,7 +396,7 @@ const findOrCreateUser = async (data: {
 
   if (!user) {
     user = await User.create({
-      name: data.name,
+      fullName: data.fullName,
       email: data.email,
       role: data?.role,
       provider: data.provider,

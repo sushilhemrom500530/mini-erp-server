@@ -49,6 +49,7 @@ app.use(logHttpRequests);
 
 // ------------------ Routes ------------------
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use("/api/v1", router);
 
 app.get("/", (_req: Request, res: Response) => {

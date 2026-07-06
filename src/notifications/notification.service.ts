@@ -51,7 +51,7 @@ export const sendNotification = async ({
   title,
   body,
   type = "general",
-  tournamentId = null,
+  orderId = null,
   paymentId = null,
   linkId = null,
   metadata = null,
@@ -60,7 +60,7 @@ export const sendNotification = async ({
     const notification = new Notification({
       sender,
       receiver,
-      tournamentId,
+      orderId,
       paymentId,
       title,
       body,

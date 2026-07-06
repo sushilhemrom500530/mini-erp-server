@@ -10,7 +10,7 @@ type UserStatus = "pending" | "active" | "inactive" | "suspended" | "deleted";
 export interface IUser {
   _id?: Types.ObjectId;
 
-  name: string;
+  fullName: string;
 
   email: string;
 

@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 const registerSchema = z.object({
-  name: z
+  fullName: z
     .string({
-      message: "Name is required",
+      message: "Full name is required",
     })
-    .min(1, "Name is required"),
+    .min(1, "Full name is required"),
 
   email: z
     .string({
@@ -25,40 +25,9 @@ const registerSchema = z.object({
       message: "Password must contain at least 1 number",
     }),
 
-  role: z.enum(["admin", "user", "basicUser", "superUser"] as const, {
+  role: z.enum(["manager", "employee"] as const, {
     message: "Invalid role",
   }),
-
-  country: z
-    .string({
-      message: "Country is required",
-    })
-    .min(1, "Country is required"),
-
-  handicap: z
-    .string({
-      message: "Handicap is required",
-    })
-    .min(1, "Handicap is required"),
-
-  coordinates: z
-    .array(z.number(), {
-      message: "Coordinates must be an array of numbers",
-    })
-    .length(2, "Coordinates must contain exactly [longitude, latitude]")
-    .refine(
-      (coords) => {
-        const [lng, lat] = coords;
-
-        const isValidLng = lng >= -180 && lng <= 180;
-        const isValidLat = lat >= -90 && lat <= 90;
-
-        return isValidLng && isValidLat;
-      },
-      {
-        message: "Invalid coordinates range",
-      },
-    ),
 });
 
 const loginUserSchema = z.object({
@@ -125,7 +94,7 @@ const appleLoginSchema = z.object({
   role: z.enum(["customer", "provider"] as const),
   user: z
     .object({
-      name: z
+      fullName: z
         .object({
           firstName: z.string().optional(),
           lastName: z.string().optional(),

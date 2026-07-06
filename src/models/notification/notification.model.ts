@@ -15,9 +15,9 @@ const notificationSchema = new Schema<INotification>(
       required: false,
     },
 
-    tournamentId: {
+    orderId: {
       type: Schema.Types.ObjectId,
-      ref: "Tournament",
+      ref: "Order",
       required: false,
     },
 
@@ -49,7 +49,7 @@ const notificationSchema = new Schema<INotification>(
 
     type: {
       type: String,
-      enum: ["payment", "general", "tournament", "update", "subscription"],
+      enum: ["payment", "general", "order", "update", "subscription"],
       default: "general",
     },
 

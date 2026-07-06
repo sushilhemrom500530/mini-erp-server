@@ -10,7 +10,7 @@ const getAllNotifaction = async (userId: string, query: any) => {
     Notification.find(),
     filter,
   )
-    .search(["name", "'title", "sender.name"])
+    .search(["fullName", "title", "sender.fullName"])
     .filter()
     .sort()
     .paginate()

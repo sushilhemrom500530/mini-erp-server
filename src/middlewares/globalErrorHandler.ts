@@ -66,7 +66,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, _next) => {
       statusCode: errorResponse.statusCode,
       path: req.originalUrl,
       method: req.method,
-      stack: NODE_ENV === "development" ? err?.stack : undefined,
+      // stack: NODE_ENV === "development" ? err?.stack : undefined,
     },
     "❌ Global Error",
   );
@@ -76,7 +76,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, _next) => {
     success: false,
     message: errorResponse.message,
     errorMessages: errorResponse.errorMessages,
-    stack: NODE_ENV === "development" ? err?.stack : null,
+    // stack: NODE_ENV === "development" ? err?.stack : null,
   });
 };
 

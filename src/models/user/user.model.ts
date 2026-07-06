@@ -5,7 +5,7 @@ import validator from "validator";
 
 const userSchema = new Schema<IUser>(
   {
-    name: {
+    fullName: {
       type: String,
       required: true,
       trim: true,

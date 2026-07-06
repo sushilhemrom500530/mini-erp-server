@@ -21,7 +21,7 @@ export interface SendNotificationParams {
   title: string;
   body: string;
   type?: NotificationType;
-  tournamentId?: Types.ObjectId | string | null;
+  orderId?: Types.ObjectId | string | null;
   paymentId?: Types.ObjectId | string | null;
   linkId?: string | null;
   isRequest?: boolean;

@@ -10,7 +10,7 @@ const getAll = async (query: any) => {
   const filter: any = { ...query, isDeleted: false };
 
   const userQuery = new QueryBuilder<IUser>(User.find(), filter)
-    .search(["name", "email", "role", "status"])
+    .search(["fullName", "email", "role", "status"])
     .filter()
     .sort()
     .paginate()

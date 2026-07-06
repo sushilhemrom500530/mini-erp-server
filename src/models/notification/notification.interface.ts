@@ -4,14 +4,14 @@ import { Types } from "mongoose";
 export type NotificationType =
   | "payment"
   | "general"
-  | "tournament"
+  | "order"
   | "update"
   | "subscription";
 
 export interface INotification extends Document {
   sender?: Types.ObjectId;
   receiver?: Types.ObjectId;
-  tournamentId?: Types.ObjectId;
+  orderId?: Types.ObjectId;
   paymentId?: Types.ObjectId;
 
   isRequest: boolean;
