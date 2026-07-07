@@ -6,12 +6,49 @@ import { connectDB } from "./config/db";
 import { PORT, NODE_ENV } from "./config";
 import { logger } from "./logger/logger";
 import { initIO } from "./utils/io";
-import "./config/redis";
 import "dotenv/config";
+
+const isVercel = !!process.env.VERCEL;
+
+// ─── Serverless Mode (Vercel) ───────────────────────────────────
+// On Vercel, we don't call server.listen(), use cluster, or init Socket.io.
+// We just need to connect to MongoDB and export the Express app.
+// Redis is handled lazily in config/redis.ts.
+
+if (isVercel) {
+  // Import redis config (it will skip connection on Vercel)
+  import("./config/redis").catch(() => {});
+
+  // Ensure MongoDB is connected before handling requests
+  let dbConnected = false;
+  let dbConnecting: Promise<void> | null = null;
+
+  app.use(async (_req, _res, next) => {
+    if (!dbConnected) {
+      if (!dbConnecting) {
+        dbConnecting = connectDB()
+          .then(() => {
+            dbConnected = true;
+          })
+          .catch((err) => {
+            dbConnecting = null;
+            throw err;
+          });
+      }
+      await dbConnecting;
+    }
+    next();
+  });
+}
+
+// ─── Traditional Server Mode (Local Dev / VPS) ──────────────────
 // import redis from "./config/redis";
 const numCPUs = os.cpus().length;
 
 async function main() {
+  // Eagerly import Redis in non-serverless mode
+  await import("./config/redis");
+
   const server = http.createServer(app);
   try {
     // Parallelize service initializations for fast startup
@@ -72,20 +109,25 @@ async function main() {
   }
 }
 
-if (cluster.isPrimary && NODE_ENV === "production") {
-  logger.info(
-    `Primary ${process.pid} is running. Forking ${numCPUs} workers...`,
-  );
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
+if (!isVercel) {
+  if (cluster.isPrimary && NODE_ENV === "production") {
+    logger.info(
+      `Primary ${process.pid} is running. Forking ${numCPUs} workers...`,
+    );
+    for (let i = 0; i < numCPUs; i++) {
+      cluster.fork();
+    }
 
-  cluster.on("exit", (worker) => {
-    logger.warn(`Worker ${worker.process.pid} died. Forking a new one...`);
-    cluster.fork();
-  });
-} else {
-  main().catch((err) => {
-    logger.error(`Server startup error: ${err}`);
-  });
+    cluster.on("exit", (worker) => {
+      logger.warn(`Worker ${worker.process.pid} died. Forking a new one...`);
+      cluster.fork();
+    });
+  } else {
+    main().catch((err) => {
+      logger.error(`Server startup error: ${err}`);
+    });
+  }
 }
+
+// Export the Express app for Vercel serverless functions
+export default app;
