@@ -7,6 +7,7 @@
     "dev": "nodemon src/server.ts",
     "git": "bash git-commit.sh",
     "build": "tsc",
+    "vercel-build": "tsc",
     "lint": "eslint src --ignore-path .eslintignore --ext .ts",
     "lint:fix": "npx eslint src --fix",
     "prettier": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
