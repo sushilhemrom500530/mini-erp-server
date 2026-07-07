@@ -2,7 +2,10 @@ import dotenv from "dotenv";
 import path from "path";
 import { z } from "zod";
 
-dotenv.config({ path: path.join(process.cwd(), ".env") });
+// On Vercel, environment variables are injected by the platform — no .env file needed
+if (!process.env.VERCEL) {
+  dotenv.config({ path: path.join(process.cwd(), ".env") });
+}
 
 const envSchema = z.object({
   DATABASE_URL: z.string({
@@ -49,8 +52,13 @@ const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
   console.error("❌ Invalid environment variables:", parsedEnv.error.format());
-  process.exit(1);
+  // In serverless, don't crash the module — let the request handler return an error
+  if (!process.env.VERCEL) {
+    process.exit(1);
+  }
 }
+
+const envData = parsedEnv.success ? parsedEnv.data : (process.env as any);
 
 export const {
   DATABASE_URL,
@@ -78,4 +86,4 @@ export const {
   CLOUDINARY_API_SECRET,
   CLOUDINARY_API_KEY,
   CLOUDINARY_NAME,
-} = parsedEnv.data;
+} = envData;

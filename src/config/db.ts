@@ -7,8 +7,12 @@ const RETRY_INTERVAL = 5000; // 5 seconds
 
 export const connectDB = async (retryCount = 0): Promise<void> => {
   if (!DATABASE_URL) {
-    logger.error("❌ DATABASE_URL is not defined in .env file");
-    process.exit(1);
+    //  logger.error("❌ DATABASE_URL is not defined in .env file");
+    // process.exit(1);
+    logger.error(
+      "❌ DATABASE_URL is not defined in .env file or Vercel dashboard",
+    );
+    throw new Error("DATABASE_URL is not defined");
   }
 
   try {
@@ -37,7 +41,8 @@ export const connectDB = async (retryCount = 0): Promise<void> => {
       setTimeout(() => connectDB(retryCount + 1), RETRY_INTERVAL);
     } else {
       logger.error("❌ Max retries reached. Could not connect to MongoDB.");
-      process.exit(1);
+      // process.exit(1);
+      throw new Error("Could not connect to MongoDB");
     }
   }
 };

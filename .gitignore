@@ -7,14 +7,15 @@ config.bat
 /dist
 /uploads
 /temp_files
+temp_auto_push.bat
 /logs
 /logs/errors
-/.vscode
 /.idea  
 
 
 # Environment files
-.env
-.env.*
 !.env.example
 !.env*.example
+.vercel
+.gitignore
+branch_structure.json
